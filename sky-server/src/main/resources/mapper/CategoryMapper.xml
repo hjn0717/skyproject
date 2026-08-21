@@ -14,4 +14,38 @@
 	    </where>
 	    order by create_time desc
 	</select>
+	<update id="updateCategory" parameterType="com.sky.entity.Category">
+	    update category
+	    <set>
+	        <if test="type != null">
+	        	type = #{type},
+	        </if>
+	        <if test="name != null and name != ''">
+	        	name = #{name},
+        	</if>
+        	<if test="sort != null">
+	        	sort = #{sort},
+        	</if>
+        	<if test="status != null">
+	        	status = #{status},
+        	</if>
+        	<if test="updateTime != null">
+	        	update_time= #{updateTime}
+        	</if>
+        	<if test="updateUser != null">
+	        	update_User = #{updateUser},
+        	</if>
+	    </set>
+	    where id = #{id}
+	</update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from category where id = #{id}
+    </delete>
+
+    <select id="listByType" parameterType="java.lang.Integer" resultType="com.sky.entity.Category">
+        select * from category
+        where type = #{type}
+        order by sort asc, create_time desc
+    </select> 
 </mapper>
