@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -15,7 +16,7 @@ import com.sky.entity.Category;
 import com.sky.mapper.CategoryMapper;
 import com.sky.result.PageResult;
 import com.sky.service.CategoryService;
-
+@Service
 public class CategoryServiceImpl implements CategoryService{
 
 	@Autowired
@@ -33,10 +34,10 @@ public class CategoryServiceImpl implements CategoryService{
 		Category category = new Category();
 		BeanUtils.copyProperties(categoryDTO, category);
 		category.setStatus(1);
-		category.setCreateTime(LocalDateTime.now());
-		category.setCreateUser(BaseContext.getCurrentId());
-		category.setUpdateTime(LocalDateTime.now());
-		category.setUpdateUser(BaseContext.getCurrentId());
+//		category.setCreateTime(LocalDateTime.now());
+//		category.setCreateUser(BaseContext.getCurrentId());
+//		category.setUpdateTime(LocalDateTime.now());
+//		category.setUpdateUser(BaseContext.getCurrentId());
 		categoryMapper.addCategory(category);
 	}
 
@@ -44,8 +45,8 @@ public class CategoryServiceImpl implements CategoryService{
 	public void updateCategory(CategoryDTO categoryDTO) {
 		Category category = new Category();
 		BeanUtils.copyProperties(categoryDTO, category);
-		category.setUpdateTime(LocalDateTime.now());
-		category.setUpdateUser(BaseContext.getCurrentId());
+//		category.setUpdateTime(LocalDateTime.now());
+//		category.setUpdateUser(BaseContext.getCurrentId());
 		categoryMapper.updateCategory(category);
 	}
 	@Override

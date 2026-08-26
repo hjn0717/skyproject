@@ -56,4 +56,9 @@ public class EmployeeLoginVO implements Serializable {
 		this.token = token;
 	}
 
+	public static Object builder() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
