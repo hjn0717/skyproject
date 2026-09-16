@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController("ShopUserController")
 @Slf4j
 @Api(tags = "店铺相关接口")
-@RequestMapping("/admin/shop")
+@RequestMapping("/user/shop")
 public class ShopController {
 	public static final String KEY = "SHOP_STATUS";
 

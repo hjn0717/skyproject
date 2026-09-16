@@ -8,17 +8,5 @@
 	    	(#{flavor.dishId},#{flavor.name},#{flavor.value})
 	    </foreach>
 	</insert>
-	<select id="pageQuery" resultType="com.sky.vo.DishVO">
-	    select d.*,c.name as 'categoryName' from dish d left join category c on d.category_Id = c.id
-	<where>
-	<if test="name != null and name != ''">
-	    and d.name like concat(
-	    <if>
-		    CONVERT(str:varchar USING ref:ref... varchar
-		    Press Enter to insert, Tab to replace Next Tip
-	    </if>
-	    )
-	</where>
 	
-	</select>
 </mapper>

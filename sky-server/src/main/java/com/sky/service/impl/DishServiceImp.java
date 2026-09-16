@@ -1,9 +1,11 @@
 package com.sky.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.Page;
@@ -22,12 +24,14 @@ import com.sky.mapper.SetMealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
-
+@Service
 public class DishServiceImp implements DishService{
 	
 	@Autowired
 	private DishMapper dishMapper;
+	@Autowired
 	private DishFlavorMapper dishFlavorMapper;
+	@Autowired
 	private SetMealDishMapper setMealDishMapper;
 	
 	@Override
@@ -102,4 +106,26 @@ public class DishServiceImp implements DishService{
 		    }
 	    }
 	}
+
+	@Override
+	public List<DishVO> listWithFlavor(Dish dish) {
+	    List<Dish> dishList = dishMapper.list(dish);
+	    List<DishVO> dishVOList = new ArrayList<>();
+	    for (Dish d : dishList) {
+	        DishVO dishVO = new DishVO();
+	        BeanUtils.copyProperties(d, dishVO);
+	        List<DishFlavor> flavors = dishFlavorMapper.selectFlavorByDishId(d.getId());
+	        dishVO.setFlavors(flavors);
+	        dishVOList.add(dishVO);
+	    }
+	    return dishVOList;
+	}
+
+	@Override
+    public void startOrStop(Integer status, Long id) {
+        Dish dish = new Dish();
+        dish.setId(id);
+        dish.setStatus(status);
+        dishMapper.updateDish(dish);
+    }
 }

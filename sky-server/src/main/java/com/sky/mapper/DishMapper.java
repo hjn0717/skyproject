@@ -1,5 +1,7 @@
 package com.sky.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -21,6 +23,7 @@ public interface DishMapper {
 	@Select("select * from dish where id = #{id}")
 	Dish selectDishInfoById(Long id);
 	
+	@Select("select * from dish where id = #{id}")
 	Dish selectDishInfoByDishId(Long id);
 	
 	@AutoFill(OperationType.UPDATE)
@@ -28,4 +31,6 @@ public interface DishMapper {
 	
 	@Delete("delete from dish_flavor where dish_id = #{id}")
 	void deleteFlavorByDishId(Long id);
+	
+	List<Dish> list(Dish dish);
 }

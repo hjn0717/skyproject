@@ -1,9 +1,10 @@
 package com.sky.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.codehaus.jettison.json.JSONObject;
+import com.alibaba.fastjson.JSONObject; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,7 @@ public class UserServiceImp implements UserService{
 	    map.put("code", userLoginDTO.getCode());
 	    String json = HttpClientUtil.doGet(WX_URL, map);
 	    JSONObject jsonObject = JSONObject.parseObject(json);
-	    String openId = jsonObject.getString(key: "openid");
+	    String openId = jsonObject.getString("openid");
 	    if (openId == null) {
 	        throw new UserNotLoginException(MessageConstant.LOGIN_FAILED);
 	    }
@@ -44,8 +45,8 @@ public class UserServiceImp implements UserService{
 	        // 代表此用户没有注册过
 	        user = User.builder().openid(openId).createTime(LocalDateTime.now()).build();
 	        // 注册用户
-	        userMapper.insertUser();
+	        userMapper.insert(user);
 	    }
-	    return null;
+	    return user;
 	}
 }

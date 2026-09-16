@@ -30,7 +30,7 @@
 	        	status = #{status},
         	</if>
         	<if test="updateTime != null">
-	        	update_time= #{updateTime}
+	        	update_time= #{updateTime},
         	</if>
         	<if test="updateUser != null">
 	        	update_User = #{updateUser},
