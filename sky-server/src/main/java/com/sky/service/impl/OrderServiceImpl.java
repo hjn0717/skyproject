@@ -2,6 +2,7 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.config.WebSocketServer;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.*;
@@ -20,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -33,7 +36,9 @@ public class OrderServiceImpl implements OrderService {
     private AddressBookMapper addressBookMapper;
     @Autowired
     private ShoppingCartMapper shoppingCartMapper;
-
+    @Autowired
+    private WebSocketServer webSocketServer;
+    
     @Override
     @Transactional
     public OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO) {
@@ -87,19 +92,19 @@ public class OrderServiceImpl implements OrderService {
         if (orders == null) {
             throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
         }
-
         orders.setStatus(Orders.TO_BE_CONFIRMED);
         orders.setPayStatus(Orders.PAID);
         orders.setCheckoutTime(LocalDateTime.now());
         orders.setPayMethod(ordersPaymentDTO.getPayMethod());
         orderMapper.update(orders);
 
+        //来单提醒核心代码
+        Map map = new HashMap();
+        map.put("type", 1); //1是来单提醒
+        map.put("orderId", orders.getId());
+        map.put("content", "订单号: " + orders.getNumber());
+        webSocketServer.sendToAllClient(com.alibaba.fastjson.JSON.toJSONString(map));
         OrderPaymentVO vo = new OrderPaymentVO();
-        vo.setTimeStamp(String.valueOf(System.currentTimeMillis() / 1000));
-        vo.setNonceStr("mock");
-        vo.setPackageStr("prepay_id=mock");
-        vo.setSignType("RSA");
-        vo.setPaySign("mock");
         return vo;
     }
 
@@ -247,5 +252,20 @@ public class OrderServiceImpl implements OrderService {
         orders.setStatus(Orders.COMPLETED);
         orders.setDeliveryTime(LocalDateTime.now());
         orderMapper.update(orders);
+    }
+	
+	@Override
+    public void reminder(Long id) {
+        Orders orders = orderMapper.getById(id);
+        if (orders == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        Map map = new HashMap();
+        //2是用户催单
+        map.put("type", 2);
+        map.put("orderId", id);
+        map.put("content", "订单号: " + orders.getNumber());
+        
+        webSocketServer.sendToAllClient(com.alibaba.fastjson.JSON.toJSONString(map));
     }
 }
